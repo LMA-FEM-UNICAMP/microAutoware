@@ -49,3 +49,8 @@ MutexControlAction
 # Integrating microAutoware
 
 - Script that copies libs to project
+
+# HIL Mode 
+
+- Use sim time
+- TaskControle
