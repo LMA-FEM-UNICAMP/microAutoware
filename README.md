@@ -3,8 +3,12 @@
 microAutoware is a package based in micro-ROS to bring the Autoware Core/Universe inside a microcontroller with Hardware-In-the-Loop (HIL) validation support.
 
 <p align="center">
-  <img width="60%" height="40%" src="figures/components.png">
+  <img width="60%" height="40%" src="figures/components_dark.png#gh-dark-mode-only">
 </p>
+<p align="center">
+  <img width="60%" height="40%" src="figures/components.png#gh-light-mode-only">
+</p>
+
 
 ---
 
@@ -62,7 +66,7 @@ STM32CubeIDE 1.15.1
           | Buffer Name            | NULL               |
           | Control Block Name     | NULL               |
 
-    - Now, the mutexes are created in `Pinout & Configuration > Middleware and Software > FREERTOS > Configuration > Mutexes`
+    - Now, the mutexes are created in `Pinout & Configuration > Middleware and Software > FREERTOS > Configuration > Mutexes`;
       - Create microAutoware mutexes as below:
 
         1. MutexVehicleStatus
@@ -81,11 +85,28 @@ STM32CubeIDE 1.15.1
             | Allocation         | Dynamic            |
             | Control Block Name | NULL               |
 
-3. Configure micro-ROS for microAutoware: [microautoware_micro-ROS_stm32 project configuration](https://github.com/LMA-FEM-UNICAMP/microautoware_micro-ROS_stm32?tab=readme-ov-file#using-this-package-with-stm32cubeide)
+3. Configure micro-ROS for microAutoware: [microautoware_micro-ROS_stm32 project configuration](https://github.com/LMA-FEM-UNICAMP/microautoware_micro-ROS_stm32?tab=readme-ov-file#using-this-package-with-stm32cubeide).
 
 ## Integrating microAutoware
 
 - Script that copies libs to project
+
+It's important to add all tasks handlers of the tasks that will communicate with microAutoware task as extern in microAutoware.c. 
+E.g.:
+
+```c
+// microAutoware.c
+// microAutoware RTOS handlers -- START
+extern osMutexId_t MutexControlActionHandle;
+extern osMutexId_t MutexControlSignalHandle;
+
+extern osThreadId_t TaskControleHandle;
+extern osThreadId_t Task1Handle;
+extern osThreadId_t Task2Handle;
+...
+extern osThreadId_t TaskN2Handle;
+// microAutoware RTOS handlers -- END
+```
 
 ## HIL Mode 
 
@@ -108,6 +129,8 @@ STM32CubeIDE 1.15.1
 <p align="center">
   <img width="50%" height="80%" src="figures/HIL_blockdiagram.png#gh-light-mode-only">
 </p>
+
+To communicate the embedded system with the CARLA Simulator, the serial-ROS package [carla_serial_bridge](https://github.com/LMA-FEM-UNICAMP/carla_serial_bridge) is used, but another strategies could be explored if it's of interest. 
 
 1. To use the HIL testbed, is needed to configure the TaskControle task, as follow:
 
