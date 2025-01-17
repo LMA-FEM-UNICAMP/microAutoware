@@ -143,7 +143,7 @@ To communicate the embedded system with the CARLA Simulator, the serial-ROS pack
            | Task Name              | TaskControle          |
            | Priority               | osPriorityAboveNormal |
            | Stack Size (Words)     | 1500                  |
-           | Entry Function         | SartTaskControle      |
+           | Entry Function         | StartaskControle      |
            | Code Generation Option | As weak               |
            | Parameter              | NULL                  |
            | Allocation             | Dynamic               |
