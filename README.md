@@ -3,7 +3,7 @@
 microAutoware is a package based in micro-ROS to bring the Autoware Core/Universe inside a microcontroller with Hardware-In-the-Loop (HIL) validation support.
 
 <p align="center">
-  <img width="460" height="300" src="figures/components.png">
+  <img width="40%" height="40%" src="figures/components.png">
 </p>
 
 ---
@@ -89,13 +89,25 @@ STM32CubeIDE 1.15.1
 
 ## HIL Mode 
 
-![microAutoware HIL testbed](figures/testbed.png)
+<p align="center">
+  <img width="80%" height="80%" src="figures/testbed.png">
+</p>
 
-![banner](figures/HIL_details_dark.png#gh-dark-mode-only)
-![banner](figures/HIL_details.png#gh-light-mode-only)
+<p align="center">
+  <img width="70%" height="80%" src="figures/HIL_details_dark.png#gh-dark-mode-only">
+</p>
 
-![banner](figures/HIL_blockdiagram_dark.png#gh-dark-mode-only)
-![banner](figures/HIL_blockdiagram.png#gh-light-mode-only)
+<p align="center">
+  <img width="70%" height="80%" src="figures/HIL_details.png#gh-light-mode-only">
+</p>
+
+<p align="center">
+  <img width="50%" height="80%" src="figures/HIL_blockdiagram_dark.png#gh-dark-mode-only">
+</p>
+
+<p align="center">
+  <img width="50%" height="80%" src="figures/HIL_blockdiagram.png#gh-light-mode-only">
+</p>
 
 1. To use the HIL testbed, is needed to configure the TaskControle task, as follow:
 
