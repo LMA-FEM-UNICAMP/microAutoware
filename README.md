@@ -39,6 +39,8 @@ microAutoware is a package based in micro-ROS to bring the Autoware Core/Univers
   - microAutoware task, that implement the micro-ROS node and declare package's global variables. 
 - `microAutoware_config.h`
   - Header file to configure microAutoware parameters, as timeouts, timing, transport layer and node name.
+- `executorCallbacks.c`
+  - Declaration of micro-ROS callback functions for timers, topics and services.
 
 ## Creating project in STM32CubeIDE
 
