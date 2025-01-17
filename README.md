@@ -2,7 +2,7 @@
 
 microAutoware is a package based in micro-ROS to bring the Autoware Core/Universe inside a microcontroller with Hardware-In-the-Loop (HIL) validation support.
 
-![banner](figures/components_dark.png#gh-dark-mode-only)
+![banner](figures/components.png#gh-dark-mode-only)
 ![banner](figures/components.png#gh-light-mode-only)
 
 ---
@@ -13,6 +13,7 @@ microAutoware is a package based in micro-ROS to bring the Autoware Core/Univers
 ![banner](figures/architecture.png#gh-light-mode-only)
 
 ![microAutoware RTOS diagram](figures/RTOS_blockdiagram.png)
+
 
 ## microAutoware lib
 
@@ -81,6 +82,8 @@ STM32CubeIDE 1.15.1
 ![microAutoware HIL architecture details](figures/HIL_details.png)
 
 ![microAutoware HIL testbed block diagram](figures/HIL_blockdiagram.png)
+![banner](figures/HIL_blockdiagram_dark.png#gh-dark-mode-only)
+![banner](figures/HIL_blockdiagram.png#gh-light-mode-only)
 
 1. To use the HIL testbed, is needed to configure the TaskControle task, as follow:
 
