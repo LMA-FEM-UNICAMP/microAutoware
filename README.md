@@ -2,13 +2,15 @@
 
 microAutoware is a package based in micro-ROS to bring the Autoware Core/Universe inside a microcontroller with Hardware-In-the-Loop (HIL) validation support.
 
-![banner](figures/components.png)
+![banner](figures/components_dark.png#gh-dark-mode-only)
+![banner](figures/components.png#gh-light-mode-only)
 
 ---
 
 ## Introduction
 
-![microAutoware architecture](figures/architecture.png)
+![banner](figures/architecture_dark.png#gh-dark-mode-only)
+![banner](figures/architecture.png#gh-light-mode-only)
 
 ![microAutoware RTOS diagram](figures/RTOS_blockdiagram.png)
 
