@@ -12,7 +12,8 @@ microAutoware is a package based in micro-ROS to bring the Autoware Core/Univers
 ![banner](figures/architecture_dark.png#gh-dark-mode-only)
 ![banner](figures/architecture.png#gh-light-mode-only)
 
-![microAutoware RTOS diagram](figures/RTOS_blockdiagram.png)
+![banner](figures/RTOS_blockdiagram_dark.png#gh-dark-mode-only)
+![banner](figures/RTOS_blockdiagram.png#gh-light-mode-only)
 
 
 ## microAutoware lib
@@ -79,9 +80,9 @@ STM32CubeIDE 1.15.1
 
 ![microAutoware HIL testbed](figures/testbed.png)
 
-![microAutoware HIL architecture details](figures/HIL_details.png)
+![banner](figures/HIL_details_dark.png#gh-dark-mode-only)
+![banner](figures/HIL_details.png#gh-light-mode-only)
 
-![microAutoware HIL testbed block diagram](figures/HIL_blockdiagram.png)
 ![banner](figures/HIL_blockdiagram_dark.png#gh-dark-mode-only)
 ![banner](figures/HIL_blockdiagram.png#gh-light-mode-only)
 
