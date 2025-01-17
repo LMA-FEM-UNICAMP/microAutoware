@@ -20,6 +20,7 @@
 // microAutoware RTOS handlers -- START
 extern osMutexId_t MutexControlActionHandle;
 extern osMutexId_t MutexVehicleStatusHandle;
+
 extern osThreadId_t TaskControleHandle;
 
 
@@ -45,10 +46,10 @@ control_action xControlAction;
 vehicle_status xVehicleStatus;
 
 /**
-  * @name   ucSubscribersRecieved
-  * @brief  Topic recieved flag for gather data and send to TaskControl.
+  * @name   ucSubscribersReceived
+  * @brief  Topic received flag for gather data and send to TaskControl.
   */
-unsigned char ucSubscribersRecieved = 0;
+unsigned char ucSubscribersReceived = 0;
 
 
 
@@ -417,8 +418,8 @@ void StartMicroAutoware(void * argument)
 
 
 
-    // Checking what data was recieved
-    if(0b1 & (ucSubscribersRecieved >> 1)) // Checking if control_cmd_sub_ data arrives (second bit of ucSubscribersRecieved)
+    // Checking what data was received
+    if(0b1 & (ucSubscribersReceived >> 1)) // Checking if control_cmd_sub_ data arrives (second bit of ucSubscribersReceived)
     {
       // Autonomous mode: Gather all subs data, then compact and send to TaskControle.
       if(AUTOWARE == ucControlMode)
@@ -498,7 +499,7 @@ void StartMicroAutoware(void * argument)
 
 
     // Reseting subscribers flags
-    ucSubscribersRecieved = 0;
+    ucSubscribersReceived = 0;
 
   }
 
