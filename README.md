@@ -2,13 +2,17 @@
 
 microAutoware is a package based in micro-ROS to bring the Autoware Core/Universe inside a microcontroller with Hardware-In-the-Loop (HIL) validation support.
 
+
 <p align="center">
-  <img width="60%" height="40%" src="figures/components_dark.png#gh-dark-mode-only">
-</p>
-<p align="center">
-  <img width="60%" height="40%" src="figures/components.png#gh-light-mode-only">
+  <img width="80%" height="80%" src="figures/testbed.png">
 </p>
 
+<p align="center">
+  <img width="35%" height="40%" src="figures/components_dark.png#gh-dark-mode-only">
+</p>
+<p align="center">
+  <img width="35%" height="40%" src="figures/components.png#gh-light-mode-only">
+</p>
 
 ---
 
@@ -121,10 +125,6 @@ extern osThreadId_t TaskN2Handle;
 ## HIL Mode 
 
 <p align="center">
-  <img width="80%" height="80%" src="figures/testbed.png">
-</p>
-
-<p align="center">
   <img width="70%" height="80%" src="figures/HIL_details_dark.png#gh-dark-mode-only">
 </p>
 
@@ -140,7 +140,7 @@ extern osThreadId_t TaskN2Handle;
   <img width="50%" height="80%" src="figures/HIL_blockdiagram.png#gh-light-mode-only">
 </p>
 
-## Embedded system configuration
+### Embedded system configuration
 
 1. To use the HIL testbed, is needed to configure the TaskControle task, as follow:
 
@@ -162,15 +162,15 @@ extern osThreadId_t TaskN2Handle;
 
 2. Finally, set the `USE_SIM_TIME` constant in `microAutoware_config.h` to `true`.
 
-## Autoware + CARLA configuration
+### Autoware + CARLA configuration
 
 The HIL testbed uses the [Carla-Autoware-Bridge](https://github.com/LMA-FEM-UNICAMP/Carla-Autoware-Bridge), forked from [[2]](#ref2) to work within microAutoware. Is necessary to follow the instructions of the repository.
 
-## microAutoware + CARLA configuration
+### microAutoware + CARLA configuration
 
-To communicate the embedded system with the CARLA Simulator, the serial-ROS package [carla_serial_bridge](https://github.com/LMA-FEM-UNICAMP/carla_serial_bridge) is used, but another strategies could be explored if it's of interest. 
+To communicate the embedded system with the CARLA Simulator, the serial-ROS package [carla_serial_bridge](https://github.com/LMA-FEM-UNICAMP/carla_serial_bridge) is used, but another strategies could be explored if it's of interest. micro-ROS aren't employed to this function to avoid overheading of the framework with the simulated vehicle data that in real world don't flow through then.
 
-## Running HIL testbed
+### Running HIL testbed
 
 1. Launch CARLA Simulator
 
@@ -210,7 +210,7 @@ python src/Carla-Autoware-Bridge/utils/thirdview_camera.py
 
 > 1, 2, 3 and 4 could be compacted in a single launch file
 
-# References
+## References
 
 
 <a id="ref1"></a> [1] micro-ROS for STM32CubeMX/IDE. Available in: [github.com/micro-ROS/micro_ros_stm32cubemx_utils](https://github.com/micro-ROS/micro_ros_stm32cubemx_utils)
