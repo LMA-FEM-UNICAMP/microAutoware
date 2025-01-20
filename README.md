@@ -27,11 +27,11 @@ microAutoware is a package based in micro-ROS to bring the Autoware Core/Univers
 </p>
 
 <p align="center">
-  <img src="figures/RTOS_blockdiagram_dark.png#gh-dark-mode-only">
+  <img width="50%" height="40%" src="figures/RTOS_blockdiagram_dark.png#gh-dark-mode-only">
 </p>
 
 <p align="center">
-  <img src="figures/RTOS_blockdiagram.png#gh-light-mode-only">
+  <img width="50%" height="40%" src="figures/RTOS_blockdiagram.png#gh-light-mode-only">
 </p>
 
 ## Dependencies
