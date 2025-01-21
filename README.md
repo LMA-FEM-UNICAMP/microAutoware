@@ -37,7 +37,7 @@ microAutoware is a package based in micro-ROS to bring the Autoware Core/Univers
 ## Dependencies
 
 - ROS 2 Humble
-- Autoware Core/Universe 2024.1
+- Autoware Core/Universe 2024.01
 - STM32 microcontroller that supports micro-ROS
 - For HIL testbed:
   - CARLA Simulator 0.9.15
