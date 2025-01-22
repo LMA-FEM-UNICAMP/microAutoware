@@ -86,6 +86,8 @@ STM32CubeIDE 1.15.1
           | Buffer Name            | NULL               |
           | Control Block Name     | NULL               |
 
+          > It's important that microAutoware task don't stay blocked for long once the executor runs periodically. Thus, is important to evaluate `TaskMicroAutowa` priority to avoid starvation.
+
     - Now, the mutexes are created in `Pinout & Configuration > Middleware and Software > FREERTOS > Configuration > Mutexes`;
       - Create microAutoware mutexes as below:
 
@@ -105,28 +107,85 @@ STM32CubeIDE 1.15.1
             | Allocation         | Dynamic            |
             | Control Block Name | NULL               |
 
+    - Finally, is necessary to create the event flag object, going to `Pinout & Configuration > Middleware and Software > FREERTOS > Configuration > Events`;
+      - Create microAutoware event flags as below:
+
+        | Field              | Parameter           |
+        | ------------------ | ------------------- |
+        | Event flags Name   | EventsMicroAutoware |
+        | Allocation         | Dynamic             |
+        | Control Block Name | NULL                |
+
 3. Configure micro-ROS for microAutoware [[1]](#ref1): [microautoware_micro-ROS_stm32 project configuration](https://github.com/LMA-FEM-UNICAMP/microautoware_micro-ROS_stm32?tab=readme-ov-file#using-this-package-with-stm32cubeide).
 
 ## Integrating microAutoware
 
 - Script that copies libs to project
 
-It's important to add all tasks handlers of the tasks that will communicate with microAutoware task as extern in microAutoware.c. 
-E.g.:
+### Global variables
 
-```c
-// microAutoware.c
-// microAutoware RTOS handlers -- START
-extern osMutexId_t MutexControlActionHandle;
-extern osMutexId_t MutexControlSignalHandle;
+#### `xVehicleStatus`
 
-extern osThreadId_t TaskControleHandle;
-extern osThreadId_t Task1Handle;
-extern osThreadId_t Task2Handle;
-...
-extern osThreadId_t TaskN2Handle;
-// microAutoware RTOS handlers -- END
-```
+- Collect vehicle information to publish in Autoware.
+
+- Type: `vehicle_status`
+  
+  | Variable          | Type    | Description               |
+  | ----------------- | ------- | ------------------------- |
+  | `xLongSpeed`      | `float` | Longitudinal speed (m/s)  |
+  | `xLatSpeed`       | `float` | Lateral speed (m/s)       |
+  | `xHeadingRate`    | `float` | Heading rate (rad/s)      |
+  | `xSteeringStatus` | `float` | Steering tire angle (rad) |
+
+#### `xControlAction`
+
+- Compact Autoware's high-level control references to embedded system low-level control tasks.
+
+- Type: `control_action`
+  
+  | Variable            | Type            | Description                     |
+  | ------------------- | --------------- | ------------------------------- |
+  | `xSteeringAngle`    | `float`         | Steering tire angle (rad)       |
+  | `xSteeringVelocity` | `float`         | Steering tire speed (rad/s)     |
+  | `xSpeed`            | `float`         | Speed (m/s)                     |
+  | `xAcceleration`     | `float`         | Acceleration (m/s^2 )           |
+  | `xJerk`             | `float`         | Jerk (m/s^3)                    |
+  | `ucControlMode`     | `unsigned char` | Vehicle control mode (HIL only) |
+
+### Flags
+
+#### `VEHICLE_DATA_UPDATED_FLAG`
+
+Once the vehicle information to the Autoware are ready, the `VEHICLE_DATA_UPDATED_FLAG` is set to microAutoware and sends that data through ROS.
+
+- Pooling flag to microAutoware task.
+
+#### `AUTOWARE_DATA_UPDATED_FLAG`
+
+When microAutoware receives Autoware's data and updates `xControlAction`, the `AUTOWARE_DATA_UPDATED_FLAG` is set to system tasks to process that information.
+
+- Blocks control task.
+
+#### `TO_AUTOWARE_MODE` flags
+
+
+
+
+#### `TO_MANUAL_MODE` flags
+
+
+
+
+#### `EMERGENCY_MODE` flags
+
+
+
+
+#### `MICRO_ROS_AGENT_ONLINE_FLAG`
+
+
+
+
 
 ## HIL Mode 
 
@@ -156,10 +215,10 @@ extern osThreadId_t TaskN2Handle;
        
            | Field                  | Parameter             |
            | ---------------------- | --------------------- |
-           | Task Name              | TaskControle          |
+           | Task Name              | TaskControl           |
            | Priority               | osPriorityAboveNormal |
            | Stack Size (Words)     | 1500                  |
-           | Entry Function         | StartTaskControle     |
+           | Entry Function         | StartTaskControl      |
            | Code Generation Option | As weak               |
            | Parameter              | NULL                  |
            | Allocation             | Dynamic               |
