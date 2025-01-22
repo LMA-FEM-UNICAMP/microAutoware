@@ -12,16 +12,12 @@
   *          Modified: 
   ******************************************************************************
   */
-#include "taskControle.h"
+#include "taskControl.h"
 
 // ADC1 buffer for channels 2 and 6.
 unsigned int uiADCBuffer[2];
 
-// From freertos.c
-extern osMutexId_t MutexControlActionHandle;
-extern osMutexId_t MutexVehicleStatusHandle;
-extern osThreadId_t TaskMicroAutowaHandle;
-extern osThreadId_t TaskControleHandle;
+extern osThreadId_t TaskControlHandle;
 
 
 // Control action struct with high level control action from MicroAutoware to TaskControle,
@@ -50,7 +46,7 @@ vehicle_status xVehicleData;
   * @param  argument: not used.
   * @retval None
   */
-void StartTaskControle(void * argument)
+void StartTaskControl(void * argument)
 {
 
   // Local variables -- START
@@ -92,8 +88,8 @@ void StartTaskControle(void * argument)
   ucControlMode = AUTOWARE;
 
   // Waiting for micro-ROS connect to agent
-  uiFlags = osThreadFlagsGet();
-  uiFlags = osThreadFlagsWait(MICRO_ROS_AGENT_ONLINE_FLAG, osFlagsWaitAny, 1000 * TIMEOUT_MICRO_ROS_AGENT); // Wait 20 seconds for uROS init
+  uiFlags = osEventFlagsGet(EventsMicroAutowareHandle);
+  uiFlags = osEventFlagsWait(EventsMicroAutowareHandle, MICRO_ROS_AGENT_ONLINE_FLAG, osFlagsWaitAny, 1000 * TIMEOUT_MICRO_ROS_AGENT); // Wait 20 seconds for uROS init
 
   // If micro-ROS agent is unvailable, start in MANUAL mode
   if(osFlagsErrorTimeout == uiFlags)
@@ -106,18 +102,18 @@ void StartTaskControle(void * argument)
   {
 
     // Looking for operation mode change by Autoware -- START
-	  uiFlags = osThreadFlagsGet();
-    uiFlags = osThreadFlagsWait(TO_AUTOWARE_MODE_FLAG | TO_MANUAL_MODE_FLAG, osFlagsWaitAny, 0);
+	uiFlags = osEventFlagsGet(EventsMicroAutowareHandle);
+    uiFlags = osEventFlagsWait(EventsMicroAutowareHandle, SYS_TO_AUTOWARE_MODE_FLAG | SYS_TO_MANUAL_MODE_FLAG, osFlagsWaitAny, 0);
 
-    if(CHECK_FLAG(TO_AUTOWARE_MODE_FLAG, uiFlags))
+    if(CHECK_FLAG(SYS_TO_AUTOWARE_MODE_FLAG, uiFlags))
     {
       ucControlMode = AUTOWARE;
     }
-    else if(CHECK_FLAG(TO_MANUAL_MODE_FLAG, uiFlags))
+    else if(CHECK_FLAG(SYS_TO_MANUAL_MODE_FLAG, uiFlags))
     {
       ucControlMode = MANUAL;
     }
-    else if(CHECK_FLAG((TO_AUTOWARE_MODE_FLAG | TO_MANUAL_MODE_FLAG), uiFlags))
+    else if(CHECK_FLAG((SYS_TO_AUTOWARE_MODE_FLAG | SYS_TO_MANUAL_MODE_FLAG), uiFlags))
     {
       ucControlMode = MANUAL;
     }
@@ -132,12 +128,12 @@ void StartTaskControle(void * argument)
       if(AUTOWARE == ucControlMode)
       {
         ucControlMode = MANUAL;
-        osThreadFlagsSet(TaskMicroAutowaHandle, TO_MANUAL_MODE_FLAG);
+        osEventFlagsSet(EventsMicroAutowareHandle, MA_TO_MANUAL_MODE_FLAG);
       }
       else if(MANUAL == ucControlMode)
       {
         ucControlMode = AUTOWARE;
-        osThreadFlagsSet(TaskMicroAutowaHandle, TO_AUTOWARE_MODE_FLAG);
+        osEventFlagsSet(EventsMicroAutowareHandle, MA_TO_AUTOWARE_MODE_FLAG);
       }
     }
     // Looking for operation mode change by JoySW -- END
@@ -149,8 +145,8 @@ void StartTaskControle(void * argument)
 	    vDrivingModeLights(ucControlMode);
 
       // WAIT for flag to sync xControlAction update
-  	  uiFlags = osThreadFlagsGet();
-      uiFlags = osThreadFlagsWait(DATA_UPDATED_FLAG, osFlagsWaitAll, TIMEOUT_GET_CONTROL_ACTION);
+  	  uiFlags = osEventFlagsGet(EventsMicroAutowareHandle);
+  	  uiFlags = osEventFlagsWait(EventsMicroAutowareHandle, AUTOWARE_DATA_UPDATED_FLAG, osFlagsWaitAll, TIMEOUT_GET_CONTROL_ACTION);
 
       // Timeout error -- deadline lost
       if(osFlagsErrorTimeout == uiFlags)
@@ -162,17 +158,17 @@ void StartTaskControle(void * argument)
         if(ucNumberOfLostMessageCtlCmd >= MAX_OF_LOST_MESSAGES) // If yes, change to manual
         {
           ucControlMode = MANUAL;
-          osThreadFlagsSet(TaskMicroAutowaHandle, TO_MANUAL_MODE_FLAG);
+          osEventFlagsSet(EventsMicroAutowareHandle, MA_TO_MANUAL_MODE_FLAG);
           ucNumberOfLostMessageCtlCmd = 0;
         }
         else // If not, sends the same command again
         {
-          HAL_UART_Transmit_DMA(&huart2, ucTxMsgToCarla, MSG_TO_CARLA_SIZE);
+          HAL_UART_Transmit_DMA(&HUART_CARLA, ucTxMsgToCarla, MSG_TO_CARLA_SIZE);
         }
       }
-      else if(CHECK_FLAG(DATA_UPDATED_FLAG, uiFlags))
+      else if(CHECK_FLAG(AUTOWARE_DATA_UPDATED_FLAG, uiFlags))
       {
-	      ucNumberOfLostMessageCtlCmd = 0;
+	    ucNumberOfLostMessageCtlCmd = 0;
 
     	  // Reshaping control command to array of bytes
         osMutexAcquire(MutexControlActionHandle, osWaitForever);
@@ -186,7 +182,7 @@ void StartTaskControle(void * argument)
         osMutexRelease(MutexControlActionHandle);
 
         // Send ucTxMsgToCarla to CARLA
-        HAL_UART_Transmit_DMA(&huart2, ucTxMsgToCarla, MSG_TO_CARLA_SIZE);
+        HAL_UART_Transmit_DMA(&HUART_CARLA, ucTxMsgToCarla, MSG_TO_CARLA_SIZE);
 
         // Wait recieve CARLA full msg xVehicleStatusRx
         uiFlags = osThreadFlagsGet();
@@ -201,13 +197,13 @@ void StartTaskControle(void * argument)
           // Check if the max of data lost was got
           if(ucNumberOfLostMessageStatus >= MAX_OF_LOST_MESSAGES) // If yes, change to manual
           {
-        	  ucControlMode = EMERGENCY;
-    		    osThreadFlagsSet(TaskMicroAutowaHandle, TO_EMERGENCY_MODE_FLAG);
+        	ucControlMode = EMERGENCY;
+        	osEventFlagsSet(EventsMicroAutowareHandle, MA_TO_EMERGENCY_MODE_FLAG);
       	    ucNumberOfLostMessageStatus = 0;
           }
           else // If not, sends the same command again
           {
-            osThreadFlagsSet(TaskMicroAutowaHandle, DATA_UPDATED_FLAG);
+        	osEventFlagsSet(EventsMicroAutowareHandle, VEHICLE_DATA_UPDATED_FLAG);
           }
         }
         else if(CHECK_FLAG(UART_NEW_DATA_FLAG, uiFlags))
@@ -222,7 +218,7 @@ void StartTaskControle(void * argument)
           osMutexRelease(MutexVehicleStatusHandle);
 
           // Sync new data with microAutoware
-          osThreadFlagsSet(TaskMicroAutowaHandle, DATA_UPDATED_FLAG);
+          osEventFlagsSet(EventsMicroAutowareHandle, VEHICLE_DATA_UPDATED_FLAG);
         }
       }
     }
@@ -255,11 +251,11 @@ void StartTaskControle(void * argument)
       osMutexRelease(MutexControlActionHandle);
 
       // Send ucTxMsgToCarla to CARLA
-      HAL_UART_Transmit_DMA(&huart2, ucTxMsgToCarla, MSG_TO_CARLA_SIZE);
+      HAL_UART_Transmit_DMA(&HUART_CARLA, ucTxMsgToCarla, MSG_TO_CARLA_SIZE);
 
       // Wait recieve CARLA full msg xVehicleStatusRx
-  	  uiFlags = osThreadFlagsGet();
-      uiFlags = osThreadFlagsWait(UART_NEW_DATA_FLAG, osFlagsWaitAll, TIMEOUT_GET_CARLA_RX);
+  	  uiFlags = osEventFlagsGet(EventsMicroAutowareHandle);
+  	  uiFlags = osEventFlagsWait(EventsMicroAutowareHandle, UART_NEW_DATA_FLAG, osFlagsWaitAll, TIMEOUT_GET_CARLA_RX);
 
       // Timeout error
       if(osFlagsErrorTimeout == uiFlags)
@@ -271,12 +267,12 @@ void StartTaskControle(void * argument)
       if(ucNumberOfLostMessageStatus >= MAX_OF_LOST_MESSAGES) // If yes, change to manual
       {
         ucControlMode = EMERGENCY;
-        osThreadFlagsSet(TaskMicroAutowaHandle, TO_EMERGENCY_MODE_FLAG);
+        osEventFlagsSet(EventsMicroAutowareHandle, MA_TO_EMERGENCY_MODE_FLAG);
         ucNumberOfLostMessageStatus = 0;
       }
       else // If not, sends the same command again
       {
-        osThreadFlagsSet(TaskMicroAutowaHandle, DATA_UPDATED_FLAG);
+    	osEventFlagsSet(EventsMicroAutowareHandle, VEHICLE_DATA_UPDATED_FLAG);
       }
       }
         else if(CHECK_FLAG(UART_NEW_DATA_FLAG, uiFlags))
@@ -290,7 +286,7 @@ void StartTaskControle(void * argument)
 
         osMutexRelease(MutexVehicleStatusHandle);
 
-        osThreadFlagsSet(TaskMicroAutowaHandle, DATA_UPDATED_FLAG);
+        osEventFlagsSet(EventsMicroAutowareHandle, VEHICLE_DATA_UPDATED_FLAG);
 	    }
 
       // WAIT for send other joystick command
@@ -320,7 +316,7 @@ void StartTaskControle(void * argument)
       osMutexRelease(MutexControlActionHandle);
 
       // Send ucTxMsgToCarla to CARLA
-      HAL_UART_Transmit_DMA(&huart2, ucTxMsgToCarla, MSG_TO_CARLA_SIZE);
+      HAL_UART_Transmit_DMA(&HUART_CARLA, ucTxMsgToCarla, MSG_TO_CARLA_SIZE);
 
       // Wait recieve CARLA full msg xVehicleStatusRx
   	  uiFlags = osThreadFlagsGet();
@@ -332,7 +328,7 @@ void StartTaskControle(void * argument)
         ucNumberOfLostMessageCtlCmd = 0;
         ucNumberOfLostMessageStatus = 0;
         ucControlMode = MANUAL;
-        osThreadFlagsSet(TaskMicroAutowaHandle, TO_MANUAL_MODE_FLAG);
+        osEventFlagsSet(EventsMicroAutowareHandle, MA_TO_MANUAL_MODE_FLAG);
       }
       
     }
@@ -360,7 +356,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
     if(uiTick > (uiJoySWTickOnPress + DEBOUNCE_TICKS)) // DEBOUNCE_TICKS debounce
     {
       uiJoySWTickOnPress = uiTick;
-      osThreadFlagsSet(TaskControleHandle, JOYSW_FLAG);
+      osThreadFlagsSet(TaskControlHandle, JOYSW_FLAG);
     }
   }
 }
@@ -373,7 +369,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
   */
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef * huart)
 {
-  if(&huart2 == huart)
+  if(&HUART_CARLA == huart)
   {
 
 	// State machine state
@@ -412,7 +408,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef * huart)
 			case '$':
 			  ucSmState = 0;
 			  // Message fully received, setting TaskControle ThreadFlag for sync.
-			  osThreadFlagsSet(TaskControleHandle, UART_NEW_DATA_FLAG);
+			  osThreadFlagsSet(TaskControlHandle, UART_NEW_DATA_FLAG);
 			  break;
 
 			default:
@@ -507,7 +503,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef * huart)
 	  }
 	}
 	// Starting other UART reading
-	HAL_UART_Receive_DMA(&huart2, ucDmaBuffer, UART2_DMA_BUFFER_SIZE);
+	HAL_UART_Receive_DMA(&HUART_CARLA, ucDmaBuffer, UART2_DMA_BUFFER_SIZE);
   }
 }
 

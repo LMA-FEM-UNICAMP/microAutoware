@@ -7,7 +7,7 @@
   * @author  Gabriel Toffanetto França da Rocha 
   *          Laboratory of Autonomous Vehicles (LMA) - FEM/Unicamp
   * @date    Created:  October 9, 2024
-  *          Modified: 
+  *          Modified: January 22, 2025
   ******************************************************************************
   */
 #ifndef MICROAUTOWARE_H_
@@ -46,35 +46,48 @@
   #include <tier4_vehicle_msgs/msg/actuation_status_stamped.h>
   #include <tier4_vehicle_msgs/msg/steering_wheel_status_stamped.h>
   #include <tier4_vehicle_msgs/msg/vehicle_emergency_stamped.h>
-  // Includes -- END
 
-#if USE_SIM_TIME == 1
-  #define SIMULATION_TIME
-#endif
-
-  // Driving mode
-  #define EMERGENCY 0
-  #define AUTOWARE 1
-  #define MANUAL 4
-
-  // ThreadFlags
-  #define TO_AUTOWARE_MODE_FLAG 0x01
-  #define TO_MANUAL_MODE_FLAG 0x10
-  #define TO_EMERGENCY_MODE_FLAG 0x1000000
-  #define DATA_UPDATED_FLAG 0x100
-  #define MICRO_ROS_AGENT_ONLINE_FLAG 0x100000 
-
-  // Check flag macro for bitwise comparison of ThreadFlags
-  #define CHECK_FLAG(flag, input) ((flag & input) == flag && !(input >> 31))
-
+  // Transport layer includes
 #if TRANSPORT == UART
   #include "usart.h"
   #include "dma.h"
 #endif  /* TRANSPORT == UART */
 
+  // Includes -- END
+
+  // Defines -- START
+
+  // HIL mode
+#if USE_SIM_TIME == 1
+  #define SIMULATION_TIME
+#endif
+
+  // Driving modes
+  #define EMERGENCY 0
+  #define AUTOWARE 1
+  #define MANUAL 4
+
+  // EventFlags
+  #define MA_TO_AUTOWARE_MODE_FLAG      0b0000000010
+  #define MA_TO_MANUAL_MODE_FLAG        0b0000000100
+  #define MA_TO_EMERGENCY_MODE_FLAG     0b0000001000
+  #define SYS_TO_AUTOWARE_MODE_FLAG     0b0000010000
+  #define SYS_TO_MANUAL_MODE_FLAG       0b0000100000
+  #define SYS_TO_EMERGENCY_MODE_FLAG    0b0001000000
+  #define VEHICLE_DATA_UPDATED_FLAG     0b0010000000
+  #define AUTOWARE_DATA_UPDATED_FLAG    0b0100000000
+  #define MICRO_ROS_AGENT_ONLINE_FLAG   0b1000000000
+
+  // Check flag macro for bitwise comparison of ThreadFlags
+  #define CHECK_FLAG(flag, input) ((flag & input) == flag && !(input >> 31))
+
+  // Defines -- END
+
+  // Typedefs -- START
+
   /**
   * @name   float_bytes
-  * @brief  Union to send float through UART.
+  * @brief  Union to send float through UART (split float in bytes).
   */
   typedef union{
     float fFloat;
@@ -126,21 +139,7 @@
     float fSteeringStatus;
   } control_signal;
 
-
-
-  // Autoware Quality of Service
-  static const rmw_qos_profile_t rmw_qos_profile_autoware =
-    {
-      RMW_QOS_POLICY_HISTORY_KEEP_LAST,
-      1,
-      RMW_QOS_POLICY_RELIABILITY_RELIABLE,
-      RMW_QOS_POLICY_DURABILITY_VOLATILE,
-      RMW_QOS_DEADLINE_DEFAULT,
-      RMW_QOS_LIFESPAN_DEFAULT,
-      RMW_QOS_POLICY_LIVELINESS_SYSTEM_DEFAULT,
-      RMW_QOS_LIVELINESS_LEASE_DURATION_DEFAULT,
-      false
-    };
+  // Typedefs -- END
 
   // Function Prototypes -- START
 
@@ -170,5 +169,29 @@
   void control_mode_cmd_callback(const void * xRequestMsg, autoware_auto_vehicle_msgs__srv__ControlModeCommand_Response * xResponseMsg);
 
   // Function Prototypes -- END
+
+
+  // microAutoware RTOS handlers -- START
+  extern osMutexId_t MutexControlActionHandle;
+  extern osMutexId_t MutexVehicleStatusHandle;
+
+  extern osEventFlagsId_t EventsMicroAutowareHandle;
+
+  // microAutoware RTOS handlers -- END
+
+  // Autoware Quality of Service
+  static const rmw_qos_profile_t rmw_qos_profile_autoware =
+    {
+      RMW_QOS_POLICY_HISTORY_KEEP_LAST,
+      1,
+      RMW_QOS_POLICY_RELIABILITY_RELIABLE,
+      RMW_QOS_POLICY_DURABILITY_VOLATILE,
+      RMW_QOS_DEADLINE_DEFAULT,
+      RMW_QOS_LIFESPAN_DEFAULT,
+      RMW_QOS_POLICY_LIVELINESS_SYSTEM_DEFAULT,
+      RMW_QOS_LIVELINESS_LEASE_DURATION_DEFAULT,
+      false
+    };
+
 
 #endif /* MICROAUTOWARE_H_ */

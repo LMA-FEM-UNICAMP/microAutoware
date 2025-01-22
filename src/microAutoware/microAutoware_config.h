@@ -1,4 +1,15 @@
-#ifndef MICROAUTOWARE_CONFIG_H_
+/**
+  ******************************************************************************
+  * @file    microAutoware_config.h
+  * @brief   This file contains the definitions of parameters that configures
+  * 		 microAutoware.
+  ******************************************************************************
+  * @author  Gabriel Toffanetto França da Rocha
+  *          Laboratory of Autonomous Vehicles (LMA) - FEM/Unicamp
+  * @date    Created:  December 10, 2024
+  *          Modified: January 22, 2025
+  ******************************************************************************
+  */#ifndef MICROAUTOWARE_CONFIG_H_
 #define MICROAUTOWARE_CONFIG_H_
 
   #define UART 1

@@ -17,10 +17,6 @@
 extern unsigned char ucSubscribersReceived;
 extern autoware_auto_vehicle_msgs__srv__ControlModeCommand_Response control_mode_response_msg_;
 
-// From freertos.c
-extern osThreadId_t TaskControleHandle;
-extern osThreadId_t TaskMicroAutowaHandle;
-
 // Timer callbacks
 /**
   * @name   timer_watchdog_agent_callback
@@ -34,8 +30,8 @@ void timer_watchdog_agent_callback(rcl_timer_t * timer, int64_t last_call_time)
 	
   if(RMW_RET_OK != rmw_uros_ping_agent(20, 1)) 
   {
-    osThreadFlagsSet(TaskControleHandle, TO_MANUAL_MODE_FLAG);
-    osThreadFlagsSet(TaskMicroAutowaHandle, TO_MANUAL_MODE_FLAG);
+    osEventFlagsSet(EventsMicroAutowareHandle, MA_TO_MANUAL_MODE_FLAG);
+    osEventFlagsSet(EventsMicroAutowareHandle, SYS_TO_MANUAL_MODE_FLAG);
   } 
 
   // Try to reconnect
@@ -148,14 +144,14 @@ void control_mode_cmd_callback(const void * xRequestMsg, autoware_auto_vehicle_m
   if(AUTOWARE == control_mode_request_msg_->mode)
   {
     xResponseMsg->success = true;
-    osThreadFlagsSet(TaskControleHandle, TO_AUTOWARE_MODE_FLAG);
-    osThreadFlagsSet(TaskMicroAutowaHandle, TO_AUTOWARE_MODE_FLAG);
+    osEventFlagsSet(EventsMicroAutowareHandle, MA_TO_AUTOWARE_MODE_FLAG);
+    osEventFlagsSet(EventsMicroAutowareHandle, SYS_TO_AUTOWARE_MODE_FLAG);
   }
   else if(MANUAL == control_mode_request_msg_->mode)
   {
     xResponseMsg->success = true;
-    osThreadFlagsSet(TaskControleHandle, TO_MANUAL_MODE_FLAG);
-    osThreadFlagsSet(TaskMicroAutowaHandle, TO_MANUAL_MODE_FLAG);
+    osEventFlagsSet(EventsMicroAutowareHandle, MA_TO_MANUAL_MODE_FLAG);
+    osEventFlagsSet(EventsMicroAutowareHandle, SYS_TO_MANUAL_MODE_FLAG);
   }
   else
   {

@@ -24,8 +24,8 @@
 #define JOY_DEAD_BAND 500
 
 // ThreadFlags
-#define JOYSW_FLAG 0x1000
-#define UART_NEW_DATA_FLAG 0x10000
+#define JOYSW_FLAG 0b01
+#define UART_NEW_DATA_FLAG 0b10
 
 /**
   * @name   fGetJoyPostition
