@@ -202,11 +202,11 @@ When the embedded system is powered on, microAutoware tries to connect to the mi
 ## HIL Mode 
 
 <p align="center">
-  <img width="70%" height="80%" src="figures/HIL_details_dark.png#gh-dark-mode-only">
+  <img width="90%" height="80%" src="figures/HIL_details_dark.png#gh-dark-mode-only">
 </p>
 
 <p align="center">
-  <img width="70%" height="80%" src="figures/HIL_details.png#gh-light-mode-only">
+  <img width="90%" height="80%" src="figures/HIL_details.png#gh-light-mode-only">
 </p>
 
 <p align="center">
