@@ -24,6 +24,11 @@ microAutoware is a package based in micro-ROS to bring the Autoware Core/Univers
 
 ## Introduction
 
+Looking to bring standardization to the Autoware Core/Universe interface with the vehicle's low-level modules, microAutoware utilizes micro-ROS to embed the vehicle interface module inside the microcontroller, using the default ROS2 topics and services to control the vehicle. Another advantage of this package is its independence from the physical layer, where data between Autoware and microAutoware can be transmitted through UART (as validated in this repository), Ethernet, or other micro-ROS-compatible protocols.
+
+As of now, microAutoware is available only for STM32 microcontrollers using FreeRTOS, but there are future plans to expand compatibility to other hardware families and RTOSes.
+
+
 <p align="center">
   <img src="figures/architecture_dark.png#gh-dark-mode-only">
 </p>
@@ -31,6 +36,8 @@ microAutoware is a package based in micro-ROS to bring the Autoware Core/Univers
 <p align="center">
   <img src="figures/architecture.png#gh-light-mode-only">
 </p>
+
+In FreeRTOS, microAutoware is implemented as a task that communicates and synchronizes with other tasks using event flags and global variables protected by a mutex.
 
 <p align="center">
   <img width="50%" height="40%" src="figures/RTOS_blockdiagram_dark.png#gh-dark-mode-only">
@@ -116,11 +123,21 @@ STM32CubeIDE 1.15.1
         | Allocation         | Dynamic             |
         | Control Block Name | NULL                |
 
-3. Configure micro-ROS for microAutoware [[1]](#ref1): [microautoware_micro-ROS_stm32 project configuration](https://github.com/LMA-FEM-UNICAMP/microautoware_micro-ROS_stm32?tab=readme-ov-file#using-this-package-with-stm32cubeide).
 
-## Integrating microAutoware
 
-- Script that copies libs to project
+3. Copy `microAutoware_config.h` and `microAutoware.h` to `Core/Inc` project folder;
+
+4. Copy `microAutoware.c` and `executorCallbacks.c` to `Core/Src` project folder;
+
+5. Clone micro-ROS for microAutoware repository:
+
+```shell
+git clone -b humble git@github.com:LMA-FEM-UNICAMP/microautoware_micro-ROS_stm32.git
+```
+
+
+6. Configure micro-ROS for microAutoware [[1]](#ref1): [microautoware_micro-ROS_stm32 project configuration](https://github.com/LMA-FEM-UNICAMP/microautoware_micro-ROS_stm32?tab=readme-ov-file#using-this-package-with-stm32cubeide).
+
 
 ### Global variables
 
@@ -166,24 +183,19 @@ When microAutoware receives Autoware's data and updates `xControlAction`, the `A
 
 - Blocks control task.
 
-#### `TO_AUTOWARE_MODE` flags
+#### Change control mode flags
 
 
+A command to change the vehicle's control mode can be executed from either Autoware or the vehicle, i.e., there is a two-way control mode change. Therefore, the flags to activate the mode change were split into two flags for each function, with the prefix `MA_` when the command comes from the vehicle and `SYS_` when it comes from Autoware.
 
-
-#### `TO_MANUAL_MODE` flags
-
-
-
-
-#### `EMERGENCY_MODE` flags
+Both the `TO_AUTOWARE_MODE`, `TO_MANUAL_MODE`, and `EMERGENCY_MODE` flags are non-blocking and are polled at the start of the execution of the microAutoware task, as well as in the system task designed in the HIL package. The last two flags are used for fail-safe capabilities, and the last one is used exclusively for this purpose.
 
 
 
 
 #### `MICRO_ROS_AGENT_ONLINE_FLAG`
 
-
+When the embedded system is powered on, microAutoware tries to connect to the micro-ROS agent to establish communication with Autoware, and the system task loops are blocked. When this occurs, the `MICRO_ROS_AGENT_ONLINE_FLAG` flag is set, unblocking the system tasks. This flag has a timeout, and if the high-level system does not connect to the low-level system, the embedded system powers up in manual mode only.
 
 
 
