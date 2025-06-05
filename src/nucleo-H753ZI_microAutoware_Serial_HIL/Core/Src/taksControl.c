@@ -146,7 +146,7 @@ void StartTaskControl(void * argument)
 
       // WAIT for flag to sync xControlAction update
   	  uiFlags = osEventFlagsGet(EventsMicroAutowareHandle);
-  	  uiFlags = osEventFlagsWait(EventsMicroAutowareHandle, AUTOWARE_DATA_UPDATED_FLAG, osFlagsWaitAll, TIMEOUT_GET_CONTROL_ACTION);
+  	  uiFlags = osEventFlagsWait(EventsMicroAutowareHandle, AUTOWARE_NEW_DATA_FLAG, osFlagsWaitAll, TIMEOUT_GET_CONTROL_ACTION);
 
       // Timeout error -- deadline lost
       if(osFlagsErrorTimeout == uiFlags)
@@ -166,7 +166,7 @@ void StartTaskControl(void * argument)
           HAL_UART_Transmit_DMA(&HUART_CARLA, ucTxMsgToCarla, MSG_TO_CARLA_SIZE);
         }
       }
-      else if(CHECK_FLAG(AUTOWARE_DATA_UPDATED_FLAG, uiFlags))
+      else if(CHECK_FLAG(AUTOWARE_NEW_DATA_FLAG, uiFlags))
       {
 	    ucNumberOfLostMessageCtlCmd = 0;
 
@@ -203,7 +203,7 @@ void StartTaskControl(void * argument)
           }
           else // If not, sends the same command again
           {
-        	osEventFlagsSet(EventsMicroAutowareHandle, VEHICLE_DATA_UPDATED_FLAG);
+        	osEventFlagsSet(EventsMicroAutowareHandle, VEHICLE_NEW_DATA_FLAG);
           }
         }
         else if(CHECK_FLAG(UART_NEW_DATA_FLAG, uiFlags))
@@ -218,7 +218,7 @@ void StartTaskControl(void * argument)
           osMutexRelease(MutexVehicleStatusHandle);
 
           // Sync new data with microAutoware
-          osEventFlagsSet(EventsMicroAutowareHandle, VEHICLE_DATA_UPDATED_FLAG);
+          osEventFlagsSet(EventsMicroAutowareHandle, VEHICLE_NEW_DATA_FLAG);
         }
       }
     }
@@ -272,7 +272,7 @@ void StartTaskControl(void * argument)
       }
       else // If not, sends the same command again
       {
-    	osEventFlagsSet(EventsMicroAutowareHandle, VEHICLE_DATA_UPDATED_FLAG);
+    	osEventFlagsSet(EventsMicroAutowareHandle, VEHICLE_NEW_DATA_FLAG);
       }
       }
         else if(CHECK_FLAG(UART_NEW_DATA_FLAG, uiFlags))
@@ -286,7 +286,7 @@ void StartTaskControl(void * argument)
 
         osMutexRelease(MutexVehicleStatusHandle);
 
-        osEventFlagsSet(EventsMicroAutowareHandle, VEHICLE_DATA_UPDATED_FLAG);
+        osEventFlagsSet(EventsMicroAutowareHandle, VEHICLE_NEW_DATA_FLAG);
 	    }
 
       // WAIT for send other joystick command

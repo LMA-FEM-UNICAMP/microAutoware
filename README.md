@@ -171,15 +171,15 @@ git clone -b humble git@github.com:LMA-FEM-UNICAMP/microautoware_micro-ROS_stm32
 
 ### Flags
 
-#### `VEHICLE_DATA_UPDATED_FLAG`
+#### `VEHICLE_NEW_DATA_FLAG`
 
-Once the vehicle information to the Autoware are ready, the `VEHICLE_DATA_UPDATED_FLAG` is set to microAutoware and sends that data through ROS.
+Once the vehicle information to the Autoware are ready, the `VEHICLE_NEW_DATA_FLAG` is set to microAutoware and sends that data through ROS.
 
 - Pooling flag to microAutoware task.
 
-#### `AUTOWARE_DATA_UPDATED_FLAG`
+#### `AUTOWARE_NEW_DATA_FLAG`
 
-When microAutoware receives Autoware's data and updates `xControlAction`, the `AUTOWARE_DATA_UPDATED_FLAG` is set to system tasks to process that information.
+When microAutoware receives Autoware's data and updates `xControlAction`, the `AUTOWARE_NEW_DATA_FLAG` is set to system tasks to process that information.
 
 - Blocks control task.
 

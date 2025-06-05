@@ -432,7 +432,7 @@ void StartMicroAutoware(void * argument)
         osMutexRelease(MutexControlActionHandle);
 
         // Sync new Autoware command data to TaskControle
-        osEventFlagsSet(EventsMicroAutowareHandle, AUTOWARE_DATA_UPDATED_FLAG);
+        osEventFlagsSet(EventsMicroAutowareHandle, AUTOWARE_NEW_DATA_FLAG);
       }
 
     }
@@ -444,10 +444,10 @@ void StartMicroAutoware(void * argument)
     // Check flag to sync xVehicleStatus update -- Doesn't need to wait because taskControle waits for CARLA data and just pack and sent to here,
     // as microAutoware never blocks taskControle, then we don't need to wait here.
     uiFlags = osEventFlagsGet(EventsMicroAutowareHandle);
-    uiFlags = osEventFlagsWait(EventsMicroAutowareHandle, VEHICLE_DATA_UPDATED_FLAG, osFlagsWaitAll, 0);
+    uiFlags = osEventFlagsWait(EventsMicroAutowareHandle, VEHICLE_NEW_DATA_FLAG, osFlagsWaitAll, 0);
 
     // xVehicleStatus updated
-    if(CHECK_FLAG(VEHICLE_DATA_UPDATED_FLAG, uiFlags))
+    if(CHECK_FLAG(VEHICLE_NEW_DATA_FLAG, uiFlags))
     {
       // Assembling microAutoware msgs
       osMutexAcquire(MutexVehicleStatusHandle, osWaitForever);
