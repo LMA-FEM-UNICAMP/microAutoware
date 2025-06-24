@@ -290,7 +290,7 @@ python src/Carla-Autoware-Bridge/utils/thirdview_camera.py
 ## Citation
 
 ```
-@INPROCEEDINGS{darocga2025microautoware,
+@INPROCEEDINGS{darocha2025microautoware,
       author    = {da Rocha, Gabriel Toffanetto França and Bacurau, Rodrigo Moreira and Ferreira, Janito Vaqueiro},
       booktitle = {2025 IEEE Intelligent Vehicles Symposium (IV)},
       title     = {microAutoware: An Autoware Vehicle InterfaceDesigned for Real-Time Embedded Systemswith Hardware-In-the-Loop (HIL) Support},
