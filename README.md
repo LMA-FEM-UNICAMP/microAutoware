@@ -287,6 +287,17 @@ python src/Carla-Autoware-Bridge/utils/thirdview_camera.py
 
 > 1, 2, 3 and 4 could be compacted in a single launch file
 
+## Citation
+
+```
+@INPROCEEDINGS{darocga2025microautoware,
+      author    = {da Rocha, Gabriel Toffanetto França and Bacurau, Rodrigo Moreira and Ferreira, Janito Vaqueiro},
+      booktitle = {2025 IEEE Intelligent Vehicles Symposium (IV)},
+      title     = {microAutoware: An Autoware Vehicle InterfaceDesigned for Real-Time Embedded Systemswith Hardware-In-the-Loop (HIL) Support},
+      year      = {2025},
+    }
+```
+
 ## References
 
 
