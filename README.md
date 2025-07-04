@@ -1,10 +1,10 @@
-# microAutoware: An Autoware vehicle interface for real-time embedded systems
+# microAutoware: An Autoware Vehicle Interface for Real-Time Embedded Systems
 
 microAutoware is a package based in micro-ROS to bring the Autoware Core/Universe inside a microcontroller with Hardware-In-the-Loop (HIL) validation support.
 
 <div align="center">
 
-[![Linux](https://img.shields.io/badge/os-ubuntu22.04-blue.svg)](https://www.linux.org/) [![ROS2humble](https://img.shields.io/badge/ros2-humble-blue.svg)](https://docs.ros.org/en/humble/index.html) [![STM32](https://img.shields.io/badge/microcontroller-STM32-blue.svg)](https://www.st.com/en/microcontrollers-microprocessors/stm32-32-bit-arm-cortex-mcus.html)
+[![Linux](https://img.shields.io/badge/os-ubuntu22.04-blue.svg)](https://www.linux.org/) [![ROS2humble](https://img.shields.io/badge/ros2-humble-blue.svg)](https://docs.ros.org/en/humble/index.html) [![STM32](https://img.shields.io/badge/microcontroller-STM32-blue.svg)](https://www.st.com/en/microcontrollers-microprocessors/stm32-32-bit-arm-cortex-mcus.html) [![Autoware](https://img.shields.io/badge/Autoware-2024.01-blue.svg)](https://github.com/autowarefoundation/autoware/tree/2024.01)
 
 </div>
 
@@ -12,39 +12,32 @@ microAutoware is a package based in micro-ROS to bring the Autoware Core/Univers
 <p align="center">
   <img width="80%" height="80%" src="docs/figures/testbed.png">
 </p>
-
 <p align="center">
-  <img width="50%" height="40%" src="docs/figures/components_dark.png#gh-dark-mode-only">
-</p>
-<p align="center">
-  <img width="50%" height="40%" src="docs/figures/components.png#gh-light-mode-only">
+  <img width="70%" height="80%" src="docs/figures/HIL.png">
 </p>
 
 ---
 
 ## Introduction
 
-Looking to bring standardization to the Autoware Core/Universe interface with the vehicle's low-level modules, microAutoware utilizes micro-ROS to embed the vehicle interface module inside the microcontroller, using the default ROS2 topics and services to control the vehicle. Another advantage of this package is its independence from the physical layer, where data between Autoware and microAutoware can be transmitted through UART (as validated in this repository), Ethernet, or other micro-ROS-compatible protocols.
+
+Looking to bring standardization to the Autoware Core/Universe interface with the vehicle's low-level modules, microAutoware utilizes micro-ROS to embed the vehicle interface module inside the microcontroller, using the default ROS2 topics and services to control the vehicle. Another advantage of this package is its independence from the physical layer, where data between Autoware and microAutoware can be transmitted through UART (as validated in this repository), Ethernet, or other micro-ROS-compatible protocols. Acess the
+[Graphical abstract](docs/figures/graphical_abstract.png).
 
 As of now, microAutoware is available only for STM32 microcontrollers using FreeRTOS, but there are future plans to expand compatibility to other hardware families and RTOSes.
 
-
 <p align="center">
-  <img src="docs/figures/architecture_dark.png#gh-dark-mode-only">
-</p>
-
-<p align="center">
-  <img src="docs/figures/architecture.png#gh-light-mode-only">
+  <img  width="70%" height="40%" src="docs/figures/architecture.png">
 </p>
 
 In FreeRTOS, microAutoware is implemented as a task that communicates and synchronizes with other tasks using event flags and global variables protected by a mutex.
 
 <p align="center">
-  <img width="50%" height="40%" src="docs/figures/RTOS_blockdiagram_dark.png#gh-dark-mode-only">
+  <img width="50%" height="40%" src="docs/figures/vehicle_rtos.png">
 </p>
 
 <p align="center">
-  <img width="50%" height="40%" src="docs/figures/RTOS_blockdiagram.png#gh-light-mode-only">
+  <img width="70%" height="40%" src="docs/figures/RTOS_blockdiagram.png">
 </p>
 
 ## Dependencies

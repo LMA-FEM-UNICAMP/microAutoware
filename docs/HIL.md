@@ -1,19 +1,11 @@
 ## HIL Mode 
 
 <p align="center">
-  <img width="90%" height="80%" src="figures/HIL_details_dark.png#gh-dark-mode-only">
+  <img width="90%" height="80%" src="figures/HIL_details.png">
 </p>
 
 <p align="center">
-  <img width="90%" height="80%" src="figures/HIL_details.png#gh-light-mode-only">
-</p>
-
-<p align="center">
-  <img width="50%" height="80%" src="figures/HIL_blockdiagram_dark.png#gh-dark-mode-only">
-</p>
-
-<p align="center">
-  <img width="50%" height="80%" src="figures/HIL_blockdiagram.png#gh-light-mode-only">
+  <img width="70%" height="80%" src="figures/HIL_blockdiagram.png">
 </p>
 
 ### Embedded system configuration
