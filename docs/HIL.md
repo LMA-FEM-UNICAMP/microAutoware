@@ -1,8 +1,12 @@
 ## HIL Mode 
 
+HIL topics:
+
 <p align="center">
   <img width="90%" height="80%" src="figures/HIL_details.png">
 </p>
+
+In the example used to validate the paper and available in the repository, the following setup was used:
 
 <p align="center">
   <img width="70%" height="80%" src="figures/HIL_blockdiagram.png">
