@@ -68,13 +68,21 @@ In FreeRTOS, microAutoware is implemented as a task that communicates and synchr
 
 ## Citation
 
+Get more information in the microAutoware paper: [10.1109/IV64158.2025.11097536](https://doi.org/10.1109/IV64158.2025.11097536).
+
+Plese, cite us if you are using our tool (and let us know about your experience)!
+
 ```
 @INPROCEEDINGS{darocha2025microautoware,
-      author    = {{da Rocha}, Gabriel Toffanetto França and Bacurau, Rodrigo Moreira and Ferreira, Janito Vaqueiro},
-      booktitle = {2025 IEEE Intelligent Vehicles Symposium (IV)},
-      title     = {microAutoware: An Autoware Vehicle Interface Designed for Real-Time Embedded Systemswith Hardware-In-the-Loop (HIL) Support},
-      year      = {2025},
-    }
+  author={Da Rocha, Gabriel Toffanetto França and Bacurau, Rodrigo Moreira and Ferreira, Janito Vaqueiro},
+  booktitle={2025 IEEE Intelligent Vehicles Symposium (IV)}, 
+  title={microAutoware: An Autoware Vehicle Interface Designed for Real-Time Embedded Systems with Hardware-In-the-Loop (HIL) Support}, 
+  year={2025},
+  volume={},
+  number={},
+  pages={1546-1551},
+  doi={10.1109/IV64158.2025.11097536}}
+
 ```
 
 ## References
