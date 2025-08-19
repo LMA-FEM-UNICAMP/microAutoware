@@ -21,10 +21,10 @@ microAutoware is a package based in micro-ROS to bring the Autoware Core/Univers
 ## Introduction
 
 
-Looking to bring standardization to the Autoware Core/Universe interface with the vehicle's low-level modules, microAutoware utilizes micro-ROS to embed the vehicle interface module inside the microcontroller, using the default ROS2 topics and services to control the vehicle. Another advantage of this package is its independence from the physical layer, where data between Autoware and microAutoware can be transmitted through UART (as validated in this repository), Ethernet, or other micro-ROS-compatible protocols. Acess the
+Looking to bring standardization to the Autoware Core/Universe interface with the vehicle's low-level modules, microAutoware utilizes micro-ROS to embed the vehicle interface module inside the microcontroller, using the default ROS2 topics and services to control the vehicle. Another advantage of this package is its independence from the physical layer, allowing data to be transmitted between Autoware and microAutoware through UART (as validated in this repository), Ethernet, or other micro-ROS-compatible protocols. Acess the
 [Graphical abstract](docs/figures/graphical_abstract.png).
 
-As of now, microAutoware is available only for STM32 microcontrollers using FreeRTOS, but there are future plans to expand compatibility to other hardware families and RTOSes.
+Currently, microAutoware is only available for STM32 microcontrollers using FreeRTOS; however, plans are in place to expand compatibility to other hardware families and RTOSes.
 
 <p align="center">
   <img  width="70%" height="40%" src="docs/figures/architecture.png">
@@ -52,13 +52,13 @@ In FreeRTOS, microAutoware is implemented as a task that communicates and synchr
 ## microAutoware lib
 
 - `microAutoware.h`
-  - Header file including: micro-ROS libraries, Autoware libraries, defining flags, declaring structs typedefs and function prototypes.
+  - Header file including: micro-ROS libraries, Autoware libraries, defining flags, declaring structs, typedefs, and function prototypes.
 - `microAutoware.c`
-  - microAutoware task, that implement the micro-ROS node and declare package's global variables. 
+  - microAutoware task, which implements the micro-ROS node and declares the package's global variables. 
 - `microAutoware_config.h`
-  - Header file to configure microAutoware parameters, as timeouts, timing, transport layer and node name.
+  - Header file to configure microAutoware parameters, as timeouts, timing, transport layer, and node name.
 - `executorCallbacks.c`
-  - Declaration of micro-ROS callback functions for timers, topics and services.
+  - Declaration of micro-ROS callback functions for timers, topic,s and services.
 
 
 ## [Creating project in STM32CubeIDE](docs/CREATE_PROJECT.md)
@@ -70,7 +70,7 @@ In FreeRTOS, microAutoware is implemented as a task that communicates and synchr
 
 Get more information in the microAutoware paper: [10.1109/IV64158.2025.11097536](https://doi.org/10.1109/IV64158.2025.11097536).
 
-Plese, cite us if you are using our tool (and let us know about your experience)!
+Please cite us if you are using our tool (and let us know about your experience)!
 
 ```
 @INPROCEEDINGS{darocha2025microautoware,
