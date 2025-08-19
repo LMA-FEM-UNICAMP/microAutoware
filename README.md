@@ -1,6 +1,6 @@
 # microAutoware: An Autoware Vehicle Interface for Real-Time Embedded Systems
 
-microAutoware is a package based in micro-ROS to bring the Autoware Core/Universe inside a microcontroller with Hardware-In-the-Loop (HIL) validation support.
+microAutoware is a package based on micro-ROS to bring the Autoware Core/Universe inside a microcontroller with Hardware-In-the-Loop (HIL) validation support.
 
 <div align="center">
 
